@@ -1,0 +1,4 @@
+README
+- Assumptions: System starts in single user mode. 
+- Very basic script(s) to change systems IP, hostname, ntp server. Nothing fancy. 
+- Might be useful while moving VMs from one environment to other. 
