@@ -1,0 +1,62 @@
+#!/bin/sh
+
+NOARGS=65
+NOTFOUND=66
+
+if [[ -f /root/config-profile ]] 
+  then 
+  source /root/config-profile
+else
+  echo "/root/config-profile file not found."
+  exit $NOTFOUND 	
+fi
+
+# '.' (hidden files) ensures that this file will not be loaded
+
+# Backup ifcfg-eth0 as .ifcfg-eth0-orig 
+cp -p /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/.ifcfg-eth0-orig
+
+cat > /etc/sysconfig/network-scripts/ifcfg-eth0 <<- EOF
+	DEVICE=$DEVICE
+	BOOTPROTO=static
+	ONBOOT=yes
+	IPADDR=$IPADDR
+	NETMASK=$NETMASK
+	GATEWAY=$GATEWAY
+EOF
+
+# Change resolv.conf
+cp -p /etc/resolv.conf /etc/.resolv.conf-orig
+cat > /etc/resolv.conf <<- EOF
+	search $SEARCH
+	nameserver $NAMESERVER
+EOF
+
+
+# Create ntp sed commands
+cat > /root/ntpsed <<- EOF
+	/server first.ntp.server/ c \\server $NTP1
+	/server second.ntp.server/ c \\server $NTP2
+EOF
+# Edit ntp.conf file using netpsed
+sed -f /root/ntpsed  /etc/ntp.conf > /etc/ntp.conf.new
+mv /etc/ntp.conf /etc/.ntp.conf-orig
+mv /etc/ntp.conf.new /etc/ntp.conf
+
+cat > /etc/ntp/step-tickers <<- EOF
+	$NTP1
+	$NTP2
+EOF
+
+# Change hostname
+sed "/HOSTNAME/ c \\HOSTNAME=$HOSTNAME" /etc/sysconfig/network > /etc/sysconfig/network.new
+mv /etc/sysconfig/network /etc/sysconfig/.network-orig
+mv /etc/sysconfig/network.new /etc/sysconfig/network
+
+# Change default run level back to 3
+sed "/id:1:initdefault:/ s/1/3/" /etc/inittab > /etc/inittab.new
+mv /etc/inittab /etc/.inittab-orig
+mv /etc/inittab.new /etc/inittab
+
+echo "Change root password and reboot the system. "
+

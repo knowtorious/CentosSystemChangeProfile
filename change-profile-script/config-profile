@@ -1,0 +1,22 @@
+# Don't put space on either side of equal sign (=) :
+# i.e., name, equal sign (=), and double quotes (")
+
+# Change value enclosed in double quotes "value"
+
+# Change network info
+DEVICE="eth0"
+IPADDR="10.0.0.22"
+NETMASK="255.255.0.0"
+GATEWAY="10.0.0.11"
+
+# Change DNS info 
+SEARCH="example.edu"
+NAMESERVER="10.0.0.11"
+
+# Change machine hostname
+HOSTNAME="test.example.edu"
+
+# Change NTP servers
+NTP1="clock.example.edu"
+NTP2="click.example.edu"
+

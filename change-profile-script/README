@@ -1,0 +1,14 @@
+### HowTo ###
+# Assumptions: System starts in single user mode. 
+# config-profile contains new configuration for IP address, hostname and NTP servers. 
+# change-profile will search and replace previous configuration. 
+# Modify change-profile and config-profile scripts before running them. 
+
+### Typical usage in VMware environment ###
+# Edit config-profile and change-profile 
+# Change inittab to start system in single user mode on next boot
+# Create OVA file and ship the VM
+
+### !!Future Modifications?? ###
+# Run this script after boot
+# Force password changes
